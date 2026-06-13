@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tomoya Yamaguchi | AI Tool Builder</title>
+  <title>Tomoya Yamaguchi | AIツール開発</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,7 +22,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', -apple-system, sans-serif;
+      font-family: 'Hiragino Kaku Gothic ProN', 'Segoe UI', -apple-system, sans-serif;
       line-height: 1.6;
     }
 
@@ -62,6 +62,7 @@
       color: var(--text-sub);
       max-width: 520px;
       margin-bottom: 28px;
+      line-height: 1.8;
     }
 
     .hero-links {
@@ -221,6 +222,7 @@
       font-size: 0.97rem;
       color: var(--text-sub);
       margin-bottom: 24px;
+      line-height: 1.9;
     }
 
     .contact-links {
@@ -243,14 +245,15 @@
 
   <!-- HEADER -->
   <header>
-    <div class="hero-tag">AI Tool Builder</div>
+    <div class="hero-tag">AIツール開発者</div>
     <h1>Tomoya Yamaguchi</h1>
     <p class="tagline">
-      I build practical tools that solve real-world problems — from construction site management to trading dashboards — using AI-assisted development.
+      現場の課題をAIの力でツール化する。<br>
+      建設業の現場管理から日経先物のトレード支援まで、実務に根ざしたアプリを開発しています。
     </p>
     <div class="hero-links">
-      <a class="btn btn-primary" href="https://github.com/tomoya1981" target="_blank">GitHub</a>
-      <a class="btn btn-outline" href="#works">View Works</a>
+      <a class="btn btn-primary" href="#contact">お問い合わせ</a>
+      <a class="btn btn-outline" href="#works">制作実績を見る</a>
     </div>
   </header>
 
@@ -258,15 +261,16 @@
   <section id="about">
     <div class="section-label">About</div>
     <p class="about-text">
-      Based in Japan, I work as a field operations manager in the construction industry while building AI-powered tools as a side practice. My goal is to turn everyday workplace problems into simple, usable software — and to help small businesses do the same through AI consulting.
+      建設業界で現場管理マネージャーとして勤務しながら、AIを活用したツール開発を行っています。<br><br>
+      「現場を知っている人間がAIで作る」という強みを活かし、実際に使える業務効率化ツールを短期間で開発。中小企業や個人事業主の方が抱える「ちょっとした不便」をアプリで解決するAIコンサルタントを目指しています。
     </p>
     <div class="skills">
       <span class="skill">Claude Code</span>
       <span class="skill">Python</span>
       <span class="skill">HTML / CSS / JS</span>
-      <span class="skill">AI-Assisted Development</span>
-      <span class="skill">Construction / Logistics</span>
-      <span class="skill">Trading Tools</span>
+      <span class="skill">AI活用開発</span>
+      <span class="skill">建設・物流業界</span>
+      <span class="skill">トレードツール</span>
     </div>
   </section>
 
@@ -278,14 +282,14 @@
       <!-- Work 1 -->
       <div class="work-card">
         <div class="work-header">
-          <div class="work-title">Nikkei Futures Trade Tool</div>
-          <span class="work-tag tag-tool">Web App</span>
+          <div class="work-title">日経先物 トレードツール</div>
+          <span class="work-tag tag-tool">Webアプリ</span>
         </div>
         <p class="work-desc">
-          A self-use trading assistant for Nikkei 225 futures. Combines an entry checklist (macro, technical, risk management), a trade log with P&L calculation, and history export — all in a single HTML file.
+          日経225先物のエントリー判断を支援するツール。マクロ・テクニカル・リスク管理のチェックリストで感情的なトレードを防ぎ、記録・損益計算・CSV出力まで一画面で完結。
         </p>
         <div class="work-point">
-          Problem: Emotional entries without a clear checklist led to rule violations. This tool forces a structured decision before every trade.
+          課題：チェックなしの感情的なエントリーによるルール違反を防ぎたかった。構造化された判断フローを強制する仕組みをツール化。
         </div>
         <div class="work-footer">
           <div class="tech-list">
@@ -300,41 +304,41 @@
       <!-- Work 2 -->
       <div class="work-card">
         <div class="work-header">
-          <div class="work-title">Nikkei Sakata Pattern Analyzer</div>
+          <div class="work-title">日経平均先物 酒田五法分析アプリ</div>
           <span class="work-tag tag-python">Python</span>
         </div>
         <p class="work-desc">
-          Detects Japanese candlestick patterns (Sakata Five Methods) in Nikkei 225 futures data and visualizes them as an analysis web app.
+          日経225先物の価格データから酒田五法のパターンを自動検出し、チャート上に可視化する分析ツール。
         </p>
         <div class="work-point">
-          Problem: Manually scanning charts for Sakata patterns is time-consuming. This tool automates detection and highlights signals automatically.
+          課題：チャートから酒田五法のパターンを目視で探す作業が煩雑。自動検出でシグナルを瞬時に把握できるようにした。
         </div>
         <div class="work-footer">
           <div class="tech-list">
             <span class="tech">Python</span>
-            <span class="tech">Chart Analysis</span>
+            <span class="tech">チャート分析</span>
           </div>
-          <a class="work-link" href="https://github.com/tomoya1981/nikkei-sakata" target="_blank">GitHub →</a>
+          <a class="work-link" href="https://github.com/tomoyaMG/nikkei-sakata" target="_blank">GitHub →</a>
         </div>
       </div>
 
       <!-- Work 3 -->
       <div class="work-card">
         <div class="work-header">
-          <div class="work-title">Site Placement Check (HiCheck)</div>
+          <div class="work-title">現場配置チェックツール（HiCheck）</div>
           <span class="work-tag tag-python">Python</span>
         </div>
         <p class="work-desc">
-          Automates the generation of worker placement check images for construction sites. Pulls schedule data from TimeTree and outputs a PNG layout for daily deployment management.
+          建設現場の作業員配置を自動でPNG画像に出力するツール。TimeTreeのスケジュールデータを取得し、毎朝の配置管理業務を自動化。
         </p>
         <div class="work-point">
-          Problem: Creating daily placement charts manually took significant time every morning. Automation reduced this to seconds.
+          課題：毎朝の配置表作成に時間がかかっていた。自動化により数秒で完了するようになった。
         </div>
         <div class="work-footer">
           <div class="tech-list">
             <span class="tech">Python</span>
             <span class="tech">TimeTree API</span>
-            <span class="tech">PNG Generation</span>
+            <span class="tech">PNG生成</span>
           </div>
         </div>
       </div>
@@ -346,11 +350,12 @@
   <section id="contact">
     <div class="section-label">Contact</div>
     <p class="contact-text">
-      Interested in building a tool for your business, or want to talk about AI-assisted development? Feel free to reach out.
+      「こんなツールを作りたい」「業務を自動化したい」など、お気軽にご相談ください。<br>
+      中小企業・個人事業主の方からのご連絡もお待ちしています。
     </p>
     <div class="contact-links">
-      <a class="btn btn-primary" href="mailto:lgokyou01@gmail.com">Email Me</a>
-      <a class="btn btn-outline" href="https://github.com/tomoya1981" target="_blank">GitHub</a>
+      <a class="btn btn-primary" href="mailto:lgokyou01@gmail.com">メールで相談する</a>
+      <a class="btn btn-outline" href="https://github.com/tomoyaMG" target="_blank">GitHub</a>
     </div>
   </section>
 
