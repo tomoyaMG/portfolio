@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日経先物 トレードツール</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif;
+      padding: 20px 16px 60px;
+    }
+    h1 { text-align: center; font-size: 1.1rem; color: #58a6ff; margin-bottom: 20px; letter-spacing: 0.05em; }
+
+    .page { max-width: 540px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .card-title { font-size: 0.72rem; font-weight: bold; color: #8b949e; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+    /* 方向 */
+    .dir-row { display: flex; gap: 10px; }
+    .dir-btn {
+      flex: 1; padding: 13px;
+      border: 2px solid #30363d; border-radius: 8px;
+      background: #0d1117; color: #8b949e;
+      font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.15s;
+    }
+    .dir-btn.long  { border-color: #3fb950; color: #3fb950; background: #0d2818; }
+    .dir-btn.short { border-color: #f85149; color: #f85149; background: #2d0f0e; }
+
+    /* SOX */
+    .sox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .sox-row input {
+      width: 110px; padding: 8px 10px;
+      background: #0d1117; border: 1px solid #30363d;
+      border-radius: 6px; color: #e6edf3; font-size: 0.95rem; text-align: right;
+    }
+    .sox-tag { font-size: 0.78rem; padding: 2px 8px; border-radius: 4px; background: #21262d; color: #8b949e; }
+    .sox-tag.ok   { background: #0d2818; color: #3fb950; }
+    .sox-tag.warn { background: #2d1b00; color: #d29922; }
+    .sox-tag.ng   { background: #2d0f0e; color: #f85149; }
+
+    /* チェック */
+    .chk { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #21262d; cursor: pointer; user-select: none; }
+    .chk:last-child { border-bottom: none; }
+    .chk input { width: 17px; height: 17px; accent-color: #3fb950; cursor: pointer; flex-shrink: 0; }
+    .chk.bad input { accent-color: #f85149; }
+    .chk label { font-size: 0.87rem; color: #c9d1d9; cursor: pointer; line-height: 1.4; }
+    .chk.bad label { color: #ffa198; }
+
+    /* 判断ボタン */
+    .big-btn {
+      width: 100%; padding: 15px; border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 0.04em; transition: background 0.15s;
+    }
+    .big-btn.green { background: #238636; color: #fff; }
+    .big-btn.green:hover { background: #2ea043; }
+    .big-btn.blue  { background: #1f6feb; color: #fff; }
+    .big-btn.blue:hover  { background: #388bfd; }
+
+    /* 結果バナー */
+    #resultBanner {
+      display: none; border-radius: 10px; padding: 16px; text-align: center;
+    }
+    #resultBanner.ok { background: #0d2818; border: 2px solid #3fb950; }
+    #resultBanner.ng { background: #2d0f0e; border: 2px solid #f85149; }
+    .result-big { font-size: 1.9rem; font-weight: bold; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .ok .result-big { color: #3fb950; }
+    .ng .result-big { color: #f85149; }
+    .reason-list { list-style: none; text-align: left; font-size: 0.85rem; color: #c9d1d9; line-height: 1.8; }
+    .reason-list li::before { content: "▸ "; color: #f85149; }
+
+    /* ログ入力 */
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 0.72rem; color: #8b949e; }
+    .field input, .field select, .field textarea {
+      padding: 9px 10px;
+      background: #0d1117; border: 1px solid #30363d;
+      border-radius: 6px; color: #e6edf3; font-size: 0.92rem; font-family: inherit;
+    }
+    .field textarea { resize: vertical; min-height: 56px; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #58a6ff; }
+
+    #pnlBox {
+      padding: 11px; border-radius: 8px;
+      background: #0d1117; border: 1px solid #30363d;
+      text-align: center; font-size: 1.3rem; font-weight: bold; color: #8b949e;
+    }
+    #pnlBox.profit { color: #3fb950; border-color: #3fb950; background: #0d2818; }
+    #pnlBox.loss   { color: #f85149; border-color: #f85149; background: #2d0f0e; }
+
+    .small-btn {
+      padding: 5px 10px;
+      border: 1px solid #30363d; border-radius: 6px;
+      background: transparent; color: #8b949e;
+      font-size: 0.78rem; cursor: pointer; transition: color 0.15s;
+    }
+    .small-btn:hover { color: #e6edf3; }
+    .small-btn.danger:hover { color: #f85149; border-color: #f85149; }
+
+    /* サマリー */
+    #summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .sum { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 10px; text-align: center; }
+    .sum .sl { font-size: 0.7rem; color: #8b949e; margin-bottom: 3px; }
+    .sum .sv { font-size: 1rem; font-weight: bold; }
+    .sv.profit { color: #3fb950; }
+    .sv.loss   { color: #f85149; }
+
+    /* テーブル */
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th { padding: 7px 8px; border-bottom: 1px solid #30363d; color: #8b949e; font-weight: normal; text-align: left; white-space: nowrap; }
+    td { padding: 8px 8px; border-bottom: 1px solid #21262d; color: #c9d1d9; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+    .tag { padding: 2px 6px; border-radius: 4px; font-size: 0.74rem; font-weight: bold; }
+    .tag-long  { background: #0d2818; color: #3fb950; }
+    .tag-short { background: #2d0f0e; color: #f85149; }
+    .tag-ok    { background: #0d2818; color: #3fb950; }
+    .tag-ng    { background: #2d0f0e; color: #f85149; }
+    .p { color: #3fb950; font-weight: bold; }
+    .l { color: #f85149; font-weight: bold; }
+    .empty { text-align: center; color: #484f58; padding: 20px; font-size: 0.85rem; }
+    .del { padding: 2px 7px; font-size: 0.72rem; border: 1px solid #30363d; border-radius: 4px; background: transparent; color: #484f58; cursor: pointer; }
+    .del:hover { color: #f85149; border-color: #f85149; }
+
+    hr { border: none; border-top: 1px solid #30363d; }
+  </style>
+</head>
+<body>
+<h1>📊 日経先物 トレードツール</h1>
+<div class="page">
+
+  <!-- ① 方向 -->
+  <div class="card">
+    <div class="card-title">エントリー方向</div>
+    <div class="dir-row">
+      <button class="dir-btn" id="btnL" onclick="setDir('long')">▲ ロング</button>
+      <button class="dir-btn" id="btnS" onclick="setDir('short')">▼ ショート</button>
+    </div>
+  </div>
+
+  <!-- ② マクロ -->
+  <div class="card">
+    <div class="card-title">① マクロ確認</div>
+    <div class="sox-row">
+      <span style="font-size:0.86rem;color:#c9d1d9">SOX 前日比</span>
+      <input type="number" id="sox" step="0.1" placeholder="例：+1.5" oninput="updateSox()">
+      <span class="sox-tag" id="soxTag">未入力</span>
+    </div>
+    <div class="chk"><input type="checkbox" id="m1"><label for="m1">ドル円の方向がエントリー方向と一致している</label></div>
+    <div class="chk"><input type="checkbox" id="m2"><label for="m2">今日・明日に重要指標がない</label></div>
+  </div>
+
+  <!-- ③ テクニカル -->
+  <div class="card">
+    <div class="card-title">② テクニカル確認</div>
+    <div class="chk"><input type="checkbox" id="t1"><label for="t1">日足トレンドとエントリー方向が一致している</label></div>
+    <div class="chk"><input type="checkbox" id="t2"><label for="t2">サポート・レジスタンスから見て根拠がある</label></div>
+    <div class="chk"><input type="checkbox" id="t3"><label for="t3">酒田五法など反転・継続シグナルが出ている</label></div>
+  </div>
+
+  <!-- ④ リスク管理 -->
+  <div class="card">
+    <div class="card-title">③ リスク管理（全部YES必須）</div>
+    <div class="chk"><input type="checkbox" id="r1"><label for="r1">損切りラインが設定されている</label></div>
+    <div class="chk"><input type="checkbox" id="r2"><label for="r2">リスクリワードが 1:2 以上ある</label></div>
+    <div class="chk"><input type="checkbox" id="r3"><label for="r3">1回のリスクが残高の 10% 以内</label></div>
+  </div>
+
+  <!-- ⑤ 禁止条件 -->
+  <div class="card">
+    <div class="card-title">④ 禁止条件（1つでも該当 → NG）</div>
+    <div class="chk bad"><input type="checkbox" id="b1"><label for="b1">上昇トレンド中のショートを狙っている</label></div>
+    <div class="chk bad"><input type="checkbox" id="b2"><label for="b2">指標発表の 30分前後 である</label></div>
+    <div class="chk bad"><input type="checkbox" id="b3"><label for="b3">損切りが設定されていない</label></div>
+  </div>
+
+  <!-- 判断ボタン -->
+  <button class="big-btn green" onclick="judge()">判断する</button>
+
+  <!-- 結果 -->
+  <div id="resultBanner">
+    <div class="result-big" id="resultLabel"></div>
+    <ul class="reason-list" id="reasonList"></ul>
+  </div>
+
+  <!-- ログ入力 -->
+  <div class="card" id="logForm">
+    <div class="card-title">このトレードを記録する</div>
+
+    <div class="row2" style="margin-bottom:10px;">
+      <div class="field">
+        <label>日付</label>
+        <input type="date" id="tradeDate">
+      </div>
+      <div class="field">
+        <label>銘柄</label>
+        <select id="inst" onchange="calcPnl()">
+          <option value="micro">日経マイクロ（×10円）</option>
+          <option value="mini">日経ミニ（×100円）</option>
+          <option value="large">日経ラージ（×1000円）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row2" style="margin-bottom:10px;">
+      <div class="field">
+        <label>エントリー価格</label>
+        <input type="number" id="entryP" placeholder="38500" oninput="calcPnl()">
+      </div>
+      <div class="field">
+        <label>決済価格</label>
+        <input type="number" id="exitP" placeholder="38750" oninput="calcPnl()">
+      </div>
+    </div>
+    <div style="max-width:160px;margin-bottom:10px;">
+      <div class="field">
+        <label>枚数</label>
+        <input type="number" id="lots" value="1" min="1" oninput="calcPnl()">
+      </div>
+    </div>
+
+    <div id="pnlBox" style="margin-bottom:10px;">損益：－</div>
+
+    <div class="field" style="margin-bottom:12px;">
+      <label>メモ（根拠・反省など）</label>
+      <textarea id="memo" placeholder="例：日足上昇確認、SOX+1.5%、サポートで反発"></textarea>
+    </div>
+
+    <button class="big-btn blue" onclick="saveTrade()">記録する</button>
+  </div>
+
+  <!-- リセット -->
+  <button class="small-btn" onclick="resetAll()" style="align-self:center;">リセット</button>
+
+  <!-- ======== 履歴 ======== -->
+  <hr>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div class="card-title" style="margin-bottom:0;">履歴</div>
+      <div style="display:flex;gap:8px;">
+        <button class="small-btn" onclick="dlCsv()">CSV出力</button>
+        <button class="small-btn danger" onclick="clearAll()">全削除</button>
+      </div>
+    </div>
+    <div id="summary"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>日付</th><th>方向</th><th>枚</th><th>エントリー</th><th>決済</th><th>損益</th><th>判断</th><th>メモ</th><th></th></tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+      <div id="emptyMsg" class="empty">まだ記録がありません</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const KEY = 'nikkei_trade_log';
+  let dir = null, judgeResult = null;
+
+  document.getElementById('tradeDate').value = new Date().toISOString().slice(0,10);
+
+  function setDir(d) {
+    dir = d;
+    document.getElementById('btnL').className = 'dir-btn' + (d === 'long'  ? ' long'  : '');
+    document.getElementById('btnS').className = 'dir-btn' + (d === 'short' ? ' short' : '');
+    calcPnl();
+  }
+
+  function updateSox() {
+    const v = parseFloat(document.getElementById('sox').value);
+    const el = document.getElementById('soxTag');
+    if (isNaN(v)) { el.className = 'sox-tag'; el.textContent = '未入力'; return; }
+    if (v >= 1)       { el.className = 'sox-tag ok';   el.textContent = 'ロング有利'; }
+    else if (v <= -1) { el.className = 'sox-tag ng';   el.textContent = '要注意'; }
+    else              { el.className = 'sox-tag warn'; el.textContent = '中立'; }
+  }
+
+  function judge() {
+    const reasons = [];
+    const sox = parseFloat(document.getElementById('sox').value);
+
+    if (document.getElementById('b1').checked) reasons.push('上昇トレンド中のショート（禁止）');
+    if (document.getElementById('b2').checked) reasons.push('指標発表30分前後（禁止）');
+    if (document.getElementById('b3').checked) reasons.push('損切り未設定（禁止）');
+    if (!dir) reasons.push('エントリー方向が未選択');
+    if (isNaN(sox)) {
+      reasons.push('SOX前日比が未入力');
+    } else if (sox <= -1 && dir === 'long') {
+      reasons.push('SOX -1%以下でロングは不利');
+    } else if (sox >= 1 && dir === 'short') {
+      reasons.push('SOX +1%以上でショートは不利');
+    }
+    if (!document.getElementById('m1').checked) reasons.push('ドル円の方向が未確認');
+    if (!document.getElementById('m2').checked) reasons.push('重要指標あり（原則待ち）');
+    const tc = ['t1','t2','t3'].filter(id => document.getElementById(id).checked).length;
+    if (tc < 2) reasons.push(`テクニカル不足（${tc}/3点）`);
+    if (!document.getElementById('r1').checked) reasons.push('損切りライン未設定');
+    if (!document.getElementById('r2').checked) reasons.push('RR 1:2 未満');
+    if (!document.getElementById('r3').checked) reasons.push('残高10%超のリスク');
+
+    judgeResult = reasons.length === 0 ? 'OK' : 'NG';
+
+    const banner = document.getElementById('resultBanner');
+    const label  = document.getElementById('resultLabel');
+    const list   = document.getElementById('reasonList');
+    banner.style.display = 'block';
+    banner.className = judgeResult === 'OK' ? 'ok' : 'ng';
+    label.textContent = judgeResult === 'OK' ? '✅ エントリーOK' : '❌ エントリーNG';
+    list.innerHTML = '';
+
+    if (judgeResult === 'OK') {
+      const li = document.createElement('li');
+      li.style.cssText = 'color:#3fb950;list-style:none;font-size:0.9rem;';
+      li.textContent = '全条件クリア。ルール通りに執行してください。';
+      list.appendChild(li);
+    } else {
+      reasons.forEach(r => { const li = document.createElement('li'); li.textContent = r; list.appendChild(li); });
+    }
+
+    // 方向をログフォームに反映
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function calcPnl() {
+    const entry = parseFloat(document.getElementById('entryP').value);
+    const exit  = parseFloat(document.getElementById('exitP').value);
+    const lots  = parseFloat(document.getElementById('lots').value) || 1;
+    const iv = document.getElementById('inst').value;
+    const mult  = iv === 'micro' ? 10 : iv === 'mini' ? 100 : 1000;
+    const el    = document.getElementById('pnlBox');
+    if (isNaN(entry) || isNaN(exit)) { el.textContent = '損益：－'; el.className = ''; return; }
+    const pnl = (dir === 'short' ? entry - exit : exit - entry) * lots * mult;
+    el.textContent = `損益：${pnl >= 0 ? '+' : ''}${pnl.toLocaleString()}円`;
+    el.className   = pnl >= 0 ? 'profit' : 'loss';
+  }
+
+  function saveTrade() {
+    const date  = document.getElementById('tradeDate').value;
+    const entry = parseFloat(document.getElementById('entryP').value);
+    const exit  = parseFloat(document.getElementById('exitP').value);
+    const lots  = parseFloat(document.getElementById('lots').value) || 1;
+    const inst  = document.getElementById('inst').value;
+    const memo  = document.getElementById('memo').value.trim();
+
+    if (!date)        return alert('日付を入力してください');
+    if (!dir)         return alert('エントリー方向を選択してください');
+    if (isNaN(entry)) return alert('エントリー価格を入力してください');
+    if (isNaN(exit))  return alert('決済価格を入力してください');
+
+    const pnl = (dir === 'short' ? entry - exit : exit - entry) * lots * (inst === 'micro' ? 10 : inst === 'mini' ? 100 : 1000);
+    const rec = { id: Date.now(), date, dir, inst, entry, exit, lots, pnl, checker: judgeResult || '－', memo };
+
+    // ブラウザに保存
+    const logs = getLogs();
+    logs.unshift(rec);
+    saveLogs(logs);
+    renderLogs();
+
+    // Obsidianに保存（サーバー経由）
+    fetch('http://localhost:8765/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rec)
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) alert('記録しました！\n✅ Obsidianにも保存されました');
+      else alert('記録しました！\n⚠️ Obsidian保存でエラーが発生しました');
+    })
+    .catch(() => {
+      alert('記録しました！\n⚠️ Obsidianへの保存はできませんでした\nstart-trade.bat を先に起動してください');
+    });
+  }
+
+  function resetAll() {
+    dir = null; judgeResult = null;
+    document.getElementById('btnL').className = 'dir-btn';
+    document.getElementById('btnS').className = 'dir-btn';
+    document.getElementById('sox').value = '';
+    document.getElementById('soxTag').className = 'sox-tag';
+    document.getElementById('soxTag').textContent = '未入力';
+    ['m1','m2','t1','t2','t3','r1','r2','r3','b1','b2','b3'].forEach(id => {
+      document.getElementById(id).checked = false;
+    });
+    document.getElementById('resultBanner').style.display = 'none';
+    document.getElementById('entryP').value = '';
+    document.getElementById('exitP').value  = '';
+    document.getElementById('lots').value   = '1';
+    document.getElementById('memo').value   = '';
+    document.getElementById('pnlBox').textContent = '損益：－';
+    document.getElementById('pnlBox').className   = '';
+    document.getElementById('tradeDate').value = new Date().toISOString().slice(0,10);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function getLogs() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
+  function saveLogs(l) { localStorage.setItem(KEY, JSON.stringify(l)); }
+
+  function deleteTrade(id) {
+    if (!confirm('削除しますか？')) return;
+    saveLogs(getLogs().filter(r => r.id !== id));
+    renderLogs();
+  }
+
+  function clearAll() {
+    if (!confirm('全て削除しますか？')) return;
+    localStorage.removeItem(KEY);
+    renderLogs();
+  }
+
+  function renderLogs() {
+    const logs = getLogs();
+    const tbody = document.getElementById('logBody');
+    const empty = document.getElementById('emptyMsg');
+    tbody.innerHTML = '';
+    if (!logs.length) { empty.style.display = 'block'; document.getElementById('summary').innerHTML = ''; return; }
+    empty.style.display = 'none';
+    const total = logs.reduce((s,r) => s+r.pnl, 0);
+    const wins  = logs.filter(r => r.pnl > 0).length;
+    const wr    = Math.round(wins/logs.length*100);
+    document.getElementById('summary').innerHTML = `
+      <div class="sum"><div class="sl">トレード数</div><div class="sv">${logs.length}</div></div>
+      <div class="sum"><div class="sl">勝率</div><div class="sv ${wr>=50?'profit':'loss'}">${wr}%</div></div>
+      <div class="sum"><div class="sl">累計損益</div><div class="sv ${total>=0?'profit':'loss'}">${total>=0?'+':''}${total.toLocaleString()}円</div></div>
+    `;
+    logs.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${r.date}</td>
+        <td><span class="tag tag-${r.dir}">${r.dir==='long'?'▲ロング':'▼ショート'}</span></td>
+        <td>${r.lots}枚</td>
+        <td>${r.entry.toLocaleString()}</td>
+        <td>${r.exit.toLocaleString()}</td>
+        <td class="${r.pnl>=0?'p':'l'}">${r.pnl>=0?'+':''}${r.pnl.toLocaleString()}円</td>
+        <td>${r.checker!=='－'?`<span class="tag tag-${r.checker.toLowerCase()}">${r.checker}</span>`:'－'}</td>
+        <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;" title="${r.memo}">${r.memo||'－'}</td>
+        <td><button class="del" onclick="deleteTrade(${r.id})">削除</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function dlCsv() {
+    const logs = getLogs();
+    if (!logs.length) return alert('記録がありません');
+    const rows = logs.map(r =>
+      `${r.date},${r.dir==='long'?'ロング':'ショート'},${r.inst==='micro'?'マイクロ':r.inst==='mini'?'ミニ':'ラージ'},${r.entry},${r.exit},${r.lots},${r.pnl},${r.checker},"${r.memo}"`
+    );
+    const csv  = '﻿日付,方向,銘柄,エントリー,決済,枚数,損益,判断,メモ\n' + rows.join('\n');
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+    a.download = `trade-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  renderLogs();
+</script>
+</body>
+</html>
