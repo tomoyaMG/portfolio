@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomoya Yamaguchi | AI Tool Builder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-sub: #c9d1d9;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --purple: #bc8cff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── HEADER ── */
+    header {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 72px 24px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      border: 1px solid var(--green);
+      border-radius: 20px;
+      padding: 3px 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-size: 1.05rem;
+      color: var(--text-sub);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.8; text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-outline { border: 1px solid var(--border); color: var(--text-sub); background: transparent; }
+
+    /* ── SECTION ── */
+    section {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    /* ── ABOUT ── */
+    .about-text {
+      font-size: 0.97rem;
+      color: var(--text-sub);
+      line-height: 1.9;
+      max-width: 600px;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .skill {
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+    }
+
+    /* ── WORKS ── */
+    .works-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .work-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.15s;
+    }
+
+    .work-card:hover { border-color: var(--accent); }
+
+    .work-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .work-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .work-tag {
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tag-tool   { background: #0d2818; color: var(--green); border: 1px solid var(--green); }
+    .tag-web    { background: #0c2d6b; color: var(--accent); border: 1px solid var(--accent); }
+    .tag-python { background: #1e1b4b; color: var(--purple); border: 1px solid var(--purple); }
+
+    .work-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .work-point {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 14px;
+    }
+
+    .work-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tech-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tech {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .work-link {
+      font-size: 0.78rem;
+      color: var(--accent);
+    }
+
+    /* ── CONTACT ── */
+    .contact-text {
+      font-size: 0.97rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="hero-tag">AI Tool Builder</div>
+    <h1>Tomoya Yamaguchi</h1>
+    <p class="tagline">
+      I build practical tools that solve real-world problems — from construction site management to trading dashboards — using AI-assisted development.
+    </p>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="https://github.com/tomoya1981" target="_blank">GitHub</a>
+      <a class="btn btn-outline" href="#works">View Works</a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">About</div>
+    <p class="about-text">
+      Based in Japan, I work as a field operations manager in the construction industry while building AI-powered tools as a side practice. My goal is to turn everyday workplace problems into simple, usable software — and to help small businesses do the same through AI consulting.
+    </p>
+    <div class="skills">
+      <span class="skill">Claude Code</span>
+      <span class="skill">Python</span>
+      <span class="skill">HTML / CSS / JS</span>
+      <span class="skill">AI-Assisted Development</span>
+      <span class="skill">Construction / Logistics</span>
+      <span class="skill">Trading Tools</span>
+    </div>
+  </section>
+
+  <!-- WORKS -->
+  <section id="works">
+    <div class="section-label">Works</div>
+    <div class="works-grid">
+
+      <!-- Work 1 -->
+      <div class="work-card">
+        <div class="work-header">
+          <div class="work-title">Nikkei Futures Trade Tool</div>
+          <span class="work-tag tag-tool">Web App</span>
+        </div>
+        <p class="work-desc">
+          A self-use trading assistant for Nikkei 225 futures. Combines an entry checklist (macro, technical, risk management), a trade log with P&L calculation, and history export — all in a single HTML file.
+        </p>
+        <div class="work-point">
+          Problem: Emotional entries without a clear checklist led to rule violations. This tool forces a structured decision before every trade.
+        </div>
+        <div class="work-footer">
+          <div class="tech-list">
+            <span class="tech">HTML</span>
+            <span class="tech">CSS</span>
+            <span class="tech">JavaScript</span>
+            <span class="tech">localStorage</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work 2 -->
+      <div class="work-card">
+        <div class="work-header">
+          <div class="work-title">Nikkei Sakata Pattern Analyzer</div>
+          <span class="work-tag tag-python">Python</span>
+        </div>
+        <p class="work-desc">
+          Detects Japanese candlestick patterns (Sakata Five Methods) in Nikkei 225 futures data and visualizes them as an analysis web app.
+        </p>
+        <div class="work-point">
+          Problem: Manually scanning charts for Sakata patterns is time-consuming. This tool automates detection and highlights signals automatically.
+        </div>
+        <div class="work-footer">
+          <div class="tech-list">
+            <span class="tech">Python</span>
+            <span class="tech">Chart Analysis</span>
+          </div>
+          <a class="work-link" href="https://github.com/tomoya1981/nikkei-sakata" target="_blank">GitHub →</a>
+        </div>
+      </div>
+
+      <!-- Work 3 -->
+      <div class="work-card">
+        <div class="work-header">
+          <div class="work-title">Site Placement Check (HiCheck)</div>
+          <span class="work-tag tag-python">Python</span>
+        </div>
+        <p class="work-desc">
+          Automates the generation of worker placement check images for construction sites. Pulls schedule data from TimeTree and outputs a PNG layout for daily deployment management.
+        </p>
+        <div class="work-point">
+          Problem: Creating daily placement charts manually took significant time every morning. Automation reduced this to seconds.
+        </div>
+        <div class="work-footer">
+          <div class="tech-list">
+            <span class="tech">Python</span>
+            <span class="tech">TimeTree API</span>
+            <span class="tech">PNG Generation</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">Contact</div>
+    <p class="contact-text">
+      Interested in building a tool for your business, or want to talk about AI-assisted development? Feel free to reach out.
+    </p>
+    <div class="contact-links">
+      <a class="btn btn-primary" href="mailto:lgokyou01@gmail.com">Email Me</a>
+      <a class="btn btn-outline" href="https://github.com/tomoya1981" target="_blank">GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Tomoya Yamaguchi. Built with Claude Code.
+  </footer>
+
+</body>
+</html>
