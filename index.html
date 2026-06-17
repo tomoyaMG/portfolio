@@ -320,6 +320,84 @@
     }
     .work-link:hover { color: var(--cyan); letter-spacing: 0.04em; }
 
+    /* ── CONTENT ── */
+    #content { padding: 0 0 100px; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 0;
+    }
+    @media (max-width: 620px) { .content-grid { grid-template-columns: 1fr; } }
+
+    .content-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    .content-card:hover {
+      border-color: rgba(139,92,246,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(139,92,246,0.1);
+    }
+    .content-coming { cursor: default; }
+    .content-coming:hover { border-color: rgba(34,211,238,0.3); box-shadow: 0 20px 48px rgba(34,211,238,0.07); }
+
+    .content-platform { margin-bottom: 4px; }
+
+    .platform-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    .platform-note {
+      background: rgba(65,198,132,0.1);
+      border: 1px solid rgba(65,198,132,0.3);
+      color: #41c684;
+    }
+    .platform-yt {
+      background: rgba(255,70,70,0.1);
+      border: 1px solid rgba(255,70,70,0.3);
+      color: #ff6060;
+    }
+
+    .content-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--text);
+    }
+    .content-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+      flex: 1;
+    }
+    .content-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--purple);
+      transition: color 0.2s, letter-spacing 0.2s;
+    }
+    .content-card:hover .content-link { color: var(--cyan); letter-spacing: 0.04em; }
+    .content-soon { color: var(--muted); }
+    .content-card:hover .content-soon { color: var(--muted); letter-spacing: 0; }
+
     /* ── CONTACT ── */
     #contact { padding: 80px 0 100px; text-align: center; position: relative; z-index: 1; }
     .contact-eyebrow {
@@ -393,7 +471,7 @@
   <!-- NAV -->
   <nav>
     <div class="nav-inner">
-      <span class="nav-logo">TY.</span>
+      <span class="nav-logo">山口 友也</span>
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#works">Works</a></li>
@@ -562,6 +640,37 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section id="content">
+    <div class="container">
+      <div class="works-header reveal">
+        <h2 class="works-title">発信</h2>
+        <span class="works-count">Note &amp; YouTube</span>
+      </div>
+      <div class="content-grid reveal d1">
+
+        <a class="content-card" href="https://note.com/dokuritsu_design" target="_blank">
+          <div class="content-platform">
+            <span class="platform-badge platform-note">note</span>
+          </div>
+          <h3 class="content-title">独立設計士のビジネス解体新書</h3>
+          <p class="content-desc">日経先物トレードから東京起業まで、実務ベースの試行錯誤を記録しています。</p>
+          <span class="content-link">記事を読む &#x2192;</span>
+        </a>
+
+        <div class="content-card content-coming">
+          <div class="content-platform">
+            <span class="platform-badge platform-yt">YouTube</span>
+          </div>
+          <h3 class="content-title">コネなし・ツテなし荷揚げ屋の東京開拓記録</h3>
+          <p class="content-desc">大阪から東京へ。ゼロから仕事を取っていく過程をリアルタイムで発信予定。</p>
+          <span class="content-link content-soon">Coming Soon</span>
+        </div>
+
+      </div>
     </div>
   </section>
 
